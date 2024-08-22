@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String  @id @default(uuid())
+  email    String  @unique @db.Text
+  fullName String  @db.Text
+  picture  String? @db.Text
+  password String? @db.Text
+
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  // Company   Company[]
+  // PhoneList PhoneList[]
+  // SoundFile SoundFile[]
+}
+
+model Company {
+  id          Int       @id @default(autoincrement())
+  name        String
+  com_limit   Int
+  day_limit   Int
+  soundFileId Int?
+  status      Int
+  start_time  DateTime  @map("start_time")
+  end_time    DateTime  @map("end_time")
+  days        Json
+  reaction    Json
+  phonesId    Int?
+  userId      Int?
+  // soundFile   SoundFile @relation(fields: [soundFileId], references: [id])
+  // phones      PhoneList @relation(fields: [phonesId], references: [id])
+  // user        User      @relation(fields: [userId], references: [id])
+
+  @@map("companies")
+}
+
+model PhoneList {
+  id      Int       @id @default(autoincrement())
+  name    String
+  phones  Json
+  userId  Int?
+  // user    User      @relation(fields: [userId], references: [id])
+  // Company Company[]
+
+  @@map("phones")
+}
+
+model SoundFile {
+  id       Int       @id @default(autoincrement())
+  name     String
+  filePath String    @map("file_path")
+  userId   Int?
+  // user     User      @relation(fields: [userId], references: [id])
+  // Company  Company[]
+
+  @@map("soundfiles")
+}
