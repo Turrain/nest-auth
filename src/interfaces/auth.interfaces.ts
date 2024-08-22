@@ -22,3 +22,12 @@ export interface GithubUser {
     accessToken: string;
     refreshToken: string;
 }
+
+export interface YandexUser {
+    email: string;
+    firstName: string;
+    lastName: string;
+    picture: string;
+    accessToken: string;
+    refreshToken: string;
+}

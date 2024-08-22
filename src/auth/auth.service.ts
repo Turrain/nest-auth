@@ -1,7 +1,7 @@
 import { Injectable, Res } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { GoogleUser } from 'src/interfaces/auth.interfaces';
+import { GoogleUser, GithubUser, YandexUser } from 'src/interfaces/auth.interfaces';
 import { PrismaService } from 'src/prisma.service';
 import {
     BadRequestException,
@@ -49,6 +49,12 @@ export class AuthService {
             cookieOptions
         );
     }
+    private encodeUserDataAsJwt(user: User) {
+        const { password, ...userData } = user;
+
+        return this.jwtService.sign(userData);
+    }
+
 
     private async registerGoogleUser(res: Response, user: GoogleUser) {
         try {
@@ -77,12 +83,7 @@ export class AuthService {
             throw new InternalServerErrorException();
         }
     }
-    private encodeUserDataAsJwt(user: User) {
-        const { password, ...userData } = user;
-
-        return this.jwtService.sign(userData);
-    }
-
+ 
     async signInWithGoogle(
         user: GoogleUser,
         res: Response,
@@ -99,6 +100,105 @@ export class AuthService {
 
         this.setJwtTokenToCookies(res, existingUser);
 
+        return {
+            encodedUser,
+        };
+    }
+
+    private async registerYandexUser(res: Response, user: YandexUser) {
+        try {
+            const fullName =
+                !user.firstName && !user.lastName
+                    ? user.email
+                    : `${user.lastName || ''} ${user.firstName || ''}`.trim();
+    
+            const newUser = await this.prismaService.user.create({
+                data: {
+                    email: user.email,
+                    fullName,
+                    picture: user.picture,
+                },
+            });
+    
+            const encodedUser = this.encodeUserDataAsJwt(newUser);
+    
+            this.setJwtTokenToCookies(res, newUser);
+    
+            return {
+                encodedUser,
+            };
+        } catch (error) {
+            Logger.error(error);
+            throw new InternalServerErrorException();
+        }
+    }
+    
+    async signInWithYandex(
+        user: YandexUser,
+        res: Response,
+    ): Promise<{
+        encodedUser: string;
+    }> {
+        console.log("AAAAAAAAAAAA")
+        if (!user) throw new BadRequestException('Unauthenticated');
+    
+        const existingUser = await this.findUserByEmail(user.email);
+    
+        if (!existingUser) return this.registerYandexUser(res, user);
+    
+        const encodedUser = this.encodeUserDataAsJwt(existingUser);
+    
+        this.setJwtTokenToCookies(res, existingUser);
+    
+        return {
+            encodedUser,
+        };
+    }
+    
+    private async registerGitHubUser(res: Response, user: GithubUser) {
+        try {
+            const fullName =
+                !user.firstName && !user.lastName
+                    ? user.email
+                    : `${user.lastName || ''} ${user.firstName || ''}`.trim();
+    
+            const newUser = await this.prismaService.user.create({
+                data: {
+                    email: user.email,
+                    fullName,
+                    picture: user.picture, // Adjusted for GitHub's naming
+                },
+            });
+    
+            const encodedUser = this.encodeUserDataAsJwt(newUser);
+    
+            this.setJwtTokenToCookies(res, newUser);
+    
+            return {
+                encodedUser,
+            };
+        } catch (error) {
+            Logger.error(error);
+            throw new InternalServerErrorException();
+        }
+    }
+    
+    async signInWithGitHub(
+        user: GithubUser,
+        res: Response,
+    ): Promise<{
+        encodedUser: string;
+    }> {
+        if (!user) throw new BadRequestException('Unauthenticated');
+    
+        const existingUser = await this.findUserByEmail(user.email);
+    
+        if (!existingUser) return this.registerGitHubUser(res, user);
+    
+        const encodedUser = this.encodeUserDataAsJwt(existingUser);
+    
+        this.setJwtTokenToCookies(res, existingUser);
+    
         return {
             encodedUser,
         };

@@ -30,6 +30,10 @@ const AuthPage = () => {
     window.location.href = `${environment.apiUrl}/auth/github`;
   };
 
+  const onYandexLogin = () => {
+    window.location.href = `${environment.apiUrl}/auth/yandex`;
+  };
+
   return (
     <>
       <Box
@@ -104,7 +108,7 @@ const AuthPage = () => {
                   variant="outlined"
                   color="primary"
                   fullWidth
-
+                  onClick={() => onGoogleLogin()}
                 >
                   <img width={24} src={google}/>
                 
@@ -113,7 +117,7 @@ const AuthPage = () => {
                  variant="outlined"
                   color="primary"
                   fullWidth
-
+                  onClick={() => onYandexLogin()}
                 >
                  <img width={24} src={yandex}/>
                 </Button>
@@ -121,7 +125,8 @@ const AuthPage = () => {
                  variant="outlined"
                   color="primary"
                   fullWidth
-
+                  onClick={() => onGithubLogin()}
+                  disabled
                 >
                    <img width={24} src={apple}/>
                 </Button>
@@ -141,13 +146,13 @@ const AuthPage = () => {
               <form
                 onSubmit={(event) => {
                   event.preventDefault();
-                  const formElements = event.currentTarget.elements;
-                  const data = {
-                    email: formElements.email.value,
-                    password: formElements.password.value,
-                    persistent: formElements.persistent.checked,
-                  };
-                  alert(JSON.stringify(data, null, 2));
+                  // const formElements = event.currentTarget.elements;
+                  // const data = {
+                  //   email: formElements.email.value,
+                  //   password: formElements.password.value,
+                  //   persistent: formElements.persistent.checked,
+                  // };
+                  // alert(JSON.stringify(data, null, 2));
                 }}
               >
                 <FormControl required>
@@ -171,7 +176,7 @@ const AuthPage = () => {
                       Забыли пароль?
                     </Link>
                   </Box>
-                  <Button type="submit" fullWidth>
+                  <Button type="submit" fullWidth disabled>
                     Вход
                   </Button>
                 </Stack>

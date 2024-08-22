@@ -7,10 +7,11 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { GithubStrategy } from './strategies/github.strategy';
+import { YandexStrategy } from './strategies/yandex.strategy';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, PrismaService, GoogleStrategy, JwtStrategy, GithubStrategy],
+  providers: [AuthService, PrismaService, GoogleStrategy, JwtStrategy, GithubStrategy, YandexStrategy],
   imports: [
     JwtModule.registerAsync({
       imports: [ConfigModule],

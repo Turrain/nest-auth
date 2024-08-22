@@ -5,6 +5,7 @@ import { Response as ExpressResponse } from 'express';
 import { JwtGuard } from './guards/jwt-auth.guard';
 import { Response } from 'express';
 import { GithubOAuthGuard } from './guards/github-oauth.guard';
+import { YandexOAuthGuard } from './guards/yandex-oauth.guard';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
@@ -33,7 +34,7 @@ export class AuthController {
   @UseGuards(GithubOAuthGuard)
   @Get('github-auth-redirect')
   async githubAuthRedirect(@Req() req, @Res() res: Response) {
-    const { encodedUser } = await this.authService.signInWithGoogle(
+    const { encodedUser } = await this.authService.signInWithGitHub(
       req.user,
       res,
     );
@@ -42,6 +43,22 @@ export class AuthController {
     );
   }
 
+  @UseGuards(YandexOAuthGuard)
+  @Get('yandex')
+  async yandexAuth(@Req() req) {}
+
+
+  @UseGuards(YandexOAuthGuard)
+  @Get('yandex-auth-redirect')
+  async yandexAuthRedirect(@Req() req, @Res() res: Response) {
+    const { encodedUser } = await this.authService.signInWithYandex(
+      req.user,
+      res,
+    );
+    return res.redirect(
+      `${process.env.YANDEX_REDIRECT_URL_CLIENT_REACT}?jwtUser=${encodedUser}`,
+    );
+  }
 
   @UseGuards(JwtGuard)
   @Get('protected-route')
