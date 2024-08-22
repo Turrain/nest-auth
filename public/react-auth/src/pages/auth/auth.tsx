@@ -20,8 +20,8 @@ import * as React from 'react';
 import apple from "../../assets/apple.svg"
 import google from "../../assets/google.svg"
 import yandex from "../../assets/yandex.svg"
-import logo from '../../assets/logo.png'
-
+import logo from '../../assets/logo_1.png'
+import logo1 from '../../assets/logo.png'
 const AuthPage = () => {
   const onGoogleLogin = () => {
     window.location.href = `${environment.apiUrl}/auth/google`;
@@ -69,10 +69,11 @@ const AuthPage = () => {
               justifyContent: 'space-between',
             }}
           >
-            <Box sx={{ gap: 2, display: 'flex', alignItems: 'center' }}>
+            {/* <Box sx={{ gap: 2, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              
               <img height={96} src={logo} />
 
-            </Box>
+            </Box> */}
 
           </Box>
           <Box
@@ -99,10 +100,15 @@ const AuthPage = () => {
             }}
           >
             <Stack gap={4} sx={{ mb: 2 }}>
-            <Typography level='h1' sx={{textAlign: 'center'}}>
-            Units platform <br/>   aitomaton 
-            </Typography>
-          
+              <Typography level='h1' sx={{ textAlign: 'center', mb: 0, lineHeight: 0 }}>
+                Units platform
+              </Typography>
+              <Box sx={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+
+                <img height={56} src={logo} />
+
+              </Box>
+
               <Stack direction="row" gap={1}>
                 <Button
                   variant="outlined"
@@ -110,25 +116,25 @@ const AuthPage = () => {
                   fullWidth
                   onClick={() => onGoogleLogin()}
                 >
-                  <img width={24} src={google}/>
-                
+                  <img width={24} src={google} />
+
                 </Button>
                 <Button
-                 variant="outlined"
+                  variant="outlined"
                   color="primary"
                   fullWidth
                   onClick={() => onYandexLogin()}
                 >
-                 <img width={24} src={yandex}/>
+                  <img width={24} src={yandex} />
                 </Button>
                 <Button
-                 variant="outlined"
+                  variant="outlined"
                   color="primary"
                   fullWidth
                   onClick={() => onGithubLogin()}
                   disabled
                 >
-                   <img width={24} src={apple}/>
+                  <img width={24} src={apple} />
                 </Button>
               </Stack>
 
@@ -183,7 +189,10 @@ const AuthPage = () => {
               </form>
             </Stack>
           </Box>
-          <Box component="footer" sx={{ py: 3 }}>
+          <Box sx={{ mb: 0, width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+            <img height={56} src={logo1} />
+          </Box>
+          <Box component="footer" sx={{ pb: 3 }}>
             <Typography level="body-xs" textAlign="center">
               © aitomaton {new Date().getFullYear()}
             </Typography>

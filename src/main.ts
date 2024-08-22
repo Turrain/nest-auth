@@ -8,15 +8,15 @@ async function bootstrap() {
   app.enableCors();
   app.use(cookieParser());
   const config = new DocumentBuilder()
-  .setTitle('My API')
-  .setDescription('API description')
-  .setVersion('1.0')
-  .addTag('API Tag')
-  .build();
+    .setTitle('My API')
+    .setDescription('API description')
+    .setVersion('1.0')
+    .addTag('API Tag')
+    .build();
 
-// Create Swagger document
-const document = SwaggerModule.createDocument(app, config);
-SwaggerModule.setup('docs', app, document);
+  // Create Swagger document
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('docs', app, document);
   await app.listen(process.env.PORT);
 }
 bootstrap();
