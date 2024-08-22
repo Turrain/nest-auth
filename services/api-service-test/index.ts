@@ -1,20 +1,25 @@
 import axios from 'axios';
 import * as fs from 'fs';
+import * as path from 'path';
 
-async function transcribeAudio(filePath: string) {
+
+async function sendOggFileToServer(filePath: string) {
     try {
-        const fileStream = fs.createReadStream(filePath);
+        // Create a readable stream of the file
+        const absolutePath = path.resolve(filePath);
+        const fileStream = fs.createReadStream(absolutePath);
 
+        // Send the file to the server
         const response = await axios.post('http://localhost:8000/transcribe/', fileStream, {
             headers: {
-                'Content-Type': 'multipart/form-data',
+                'Content-Type': 'audio/ogg', // Ensure appropriate content-type
             },
         });
 
-        console.log('Transcription:', response.data.transcription);
+        console.log('Response:', response.data);
     } catch (error) {
-        console.error('Error transcribing audio:', error);
+   //     console.error('Error sending OGG file:', error);
     }
 }
 
-transcribeAudio('test-files/test-whisper.wav');
+sendOggFileToServer('./test-files/main.ogg');
